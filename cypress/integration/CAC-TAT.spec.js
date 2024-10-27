@@ -12,14 +12,16 @@ describe('Central de atendimento ao Cliente TAT', function() {
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
     })
 
-    it.only('preenche os campos obrigatórios e envia o formulário', function() {
-        const longText = 'Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo, Texto longo.'
+    it.only('exibe mensagem de erro ao submeter o formulário com um email com formato inválido', function() {
         cy.get('#firstName').type('Pedro')
         cy.get('#lastName').type('Monteiro')
-        cy.get('#email').type('pedro@exemplo.com')
-        cy.get('#open-text-area').type(longText, {delay: 0})
+        cy.get('#email').type('pedro@exemplo,com')   // Digita um email inválido no campo com ID "email"
+        cy.get('#open-text-area').type('Teste')
         cy.get('button[type="submit"]').click()
 
-        cy.get('.success').should('be.visible')
+        // Verifica se o elemento com a classe "error" está visível, indicando um erro
+        cy.get('.error').should('be.visible')
+
     })
+    
 }) 
