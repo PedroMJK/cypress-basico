@@ -101,7 +101,7 @@ describe('Central de atendimento ao Cliente TAT', function() {
     })
 
     // Teste 07
-    it.only('identifica o botão de Enviar usando a  funcionalidade contains', function() {
+    it('identifica o botão de Enviar usando a  funcionalidade contains', function() {
         cy.get('#firstName').type('Pedro')
         cy.get('#lastName').type('Monteiro')
         cy.get('#email').type('pedro@exemplo.com')
@@ -110,6 +110,70 @@ describe('Central de atendimento ao Cliente TAT', function() {
 
         // Verifica se o elemento com a classe "error" está visível, indicando um erro
         cy.get('.success').should('be.visible')
+    })
+
+
+    // SEGUNDO MÓDULO
+
+    // Teste 01
+    it('seleciona um produto por (Youtube) por seu texto', function() {
+        cy.get('#product')
+          .select('YouTube')   // Seleciona pelo texto (YouTube)
+          .should('have.value', 'youtube')
+    })
+
+    it('seleciona um produto por (Mentoria) por seu valor (value)', function() {
+        cy.get('#product')
+          .select('mentoria')   // Seleciona pelo valor (value)
+          .should('have.value', 'mentoria')
+    })
+
+    it('seleciona um produto por (Blog) por seu Índece', function() {
+        cy.get('#product')
+          .select(1)    // Seleciona pelo valor (value)
+          .should('have.value', 'blog')
+    })
+
+    // Teste 02
+    // Marcando inputs do tipo radio
+    it('marca o tipo de atendimento "Feedback"', function() {
+        cy.get('input[type="radio"]')
+         .check()
+         .should('be.checked')
+    })
+
+    // Teste 03
+    it('marca o tipo de atendimento', function() {
+        cy.get('input[type="radio"]')
+         .should('have.length', 3)
+         .each(function($radio) {
+            cy.wrap($radio).check()
+            cy.wrap($radio).should('be.checked')
+         })
+    })
+    
+    // Teste 04
+    it('marca ambos checkboxes, depois desmarca o último', function() {
+        cy.get('input[type="checkbox"]')
+          .check()
+          .should('be.checked')
+          .last()
+          .uncheck()
+          .should('not.be.checked')
+    })
+
+    // Teste 05
+    it.only('exibe mensagem de erro quando o telefone se torna obrigatório mas não é enviado', function() {
+        cy.get('#firstName').type('Pedro')
+        cy.get('#lastName').type('Monteiro')
+        cy.get('#email').type('pedro@exemplo.com')
+        cy.get('#phone-checkbox').check() // Checa a funcionalidade do checkbox
+        cy.get('#open-text-area').type('Teste')
+        cy.get('button[type="submit"]').click()
+
+        // Verifica se o elemento com a classe "error" está visível, indicando um erro
+        cy.get('.error').should('be.visible')
+
     })
     
 }) 
