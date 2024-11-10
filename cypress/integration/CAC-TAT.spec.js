@@ -175,5 +175,57 @@ describe('Central de atendimento ao Cliente TAT', function() {
         cy.get('.error').should('be.visible')
 
     })
+
+     // TERCEIRO MÓDULO
+
+  // Teste 01
+  it("seleciona um arquivo da pasta fixtures", function () {
+    cy.get('input[type="file"]')
+      .should("not.have.value")
+      .selectFile("./cypress/fixtures/example.json")
+      .should(function ($input) {
+        expect($input[0].files[0].name).to.equal("example.json");
+      });
+  });
+
+  // Teste 02
+  it("seleciona um arquivo simulando um drag-and-drop", function () {
+    // Seleciona o elemento de input do tipo "file" para realizar o upload de arquivo
+    cy.get('input[type="file"]')
+      // Verifica se o input inicialmente não possui nenhum arquivo selecionado
+      .should("not.have.value")
+
+      // Usa o comando `selectFile` para simular o upload do arquivo "example.json"
+      // A opção `{ action: 'drag-drop' }` simula uma ação de arrastar e soltar
+      .selectFile("./cypress/fixtures/example.json", { action: "drag-drop" })
+
+      // Valida se o arquivo foi selecionado com sucesso
+      .should(function ($input) {
+        // Verifica se o nome do primeiro arquivo selecionado é "example.json"
+        expect($input[0].files[0].name).to.equal("example.json");
+      });
+  });
+
+  // Teste 03
+  it("seleciona um arquivo utilizanddo uma fixture para o qual foi dada uma alias", function () {
+    cy.fixture("example.json").as("sampleFile");
+    cy.get('input[type="file"]')
+      .selectFile("@sampleFile")
+      // Valida se o arquivo foi selecionado com sucesso
+      .should(function ($input) {
+        // Verifica se o nome do primeiro arquivo selecionado é "example.json"
+        expect($input[0].files[0].name).to.equal("example.json");
+      });
+  });
+
+  it("verifica que a política de privacidade abre em outra aba sem necessidade de um clique", () => {
+    cy.get("#privacy a").should("have.attr", "target", "_blank");
+  });
+
+  it("acessa a página da política de privacidade removendo o target e então clicando no link", () => {
+    cy.get("#privacy a").invoke("removeAttr", "target").click();
+
+    cy.contains("Talking About Testing").should("be.visible");
+  });
     
 }) 
